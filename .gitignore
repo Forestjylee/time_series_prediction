@@ -1,5 +1,5 @@
 .vscode/
-__pycached__/
+__pycache__/
 
 *.pyc
 *.pkl
