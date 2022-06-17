@@ -4,10 +4,10 @@ from series_toolkit import SeriesProcessor
 
 
 if __name__ == '__main__':
-    fake_sin_signal = generate_fake_signal_to_test_prediction(t=50, fs=100)
-    noisy_fake_sin_signal = add_gauss_noise(fake_sin_signal, sigma=0.5)
-    save_data("test.pkl", noisy_fake_sin_signal)
-    plot_anything([fake_sin_signal, noisy_fake_sin_signal])
+    # fake_sin_signal = generate_fake_signal_to_test_prediction(t=50, fs=100)
+    # noisy_fake_sin_signal = add_gauss_noise(fake_sin_signal, sigma=0.5)
+    # save_data("test.pkl", noisy_fake_sin_signal)
+    # plot_anything([fake_sin_signal, noisy_fake_sin_signal])
     
     # save_data("test.pkl", noisy_fake_sin_signal)
     # loaded_data = load_data("test.pkl")
@@ -26,3 +26,6 @@ if __name__ == '__main__':
     
     # Get tain and test data
     # get_train_and_test_data()
+    electrical_data1 = load_electrical_data("500kV250电力变压器.txt")
+    electrical_data2 = load_electrical_data("500kV334电力变压器.txt")
+    plot_anything([electrical_data1, electrical_data2])

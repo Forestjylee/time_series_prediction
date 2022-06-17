@@ -1,5 +1,6 @@
 .vscode/
 __pycache__/
+价格信息（南网）/
 
 *.pyc
 *.pkl

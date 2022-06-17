@@ -1,4 +1,7 @@
+import numpy as np
+from tqdm import tqdm
 import tensorflow as tf
+from copy import deepcopy
 import matplotlib.pyplot as plt
 from  models.LSTM import build_LSTM_model
 from data_loader import get_train_and_test_data
@@ -7,11 +10,25 @@ from data_loader import get_train_and_test_data
 target_filepath = f"lstm_model.h5"
 
 
-def model_evaluate():
-    _, _, X_test, y_test= get_train_and_test_data()
-    model = build_LSTM_model((10, 1), 1)
+def iterative_predict(model, first_window: np.ndarray, amount: int):
+    model.load_weights(target_filepath)
+    if isinstance(first_window, np.ndarray):
+        first_window = first_window.tolist()
+    window = deepcopy(first_window)
+    predict_res = []
+    for _ in tqdm(range(amount)):
+        predict_res.append(model.predict(
+            np.array([window]).astype("float64"), verbose=False
+        )[0])
+        window.append(predict_res[-1])
+        window = window[1:]
+    return predict_res
+
+
+def model_evaluate(model, X_test, y_test):
     model.load_weights(target_filepath)
     y_predict = model.predict(X_test)
+    # y_predict = iterative_predict(model, X_test[0, :], len(y_test))
     plt.plot(y_predict, 'r')
     plt.plot(y_test, 'g-')
     plt.title('This pic is drawed using Standard Data')
@@ -19,10 +36,7 @@ def model_evaluate():
     plt.show()
 
 
-def train(epochs):
-    X_train, y_train, _, _= get_train_and_test_data()
-    
-    model = build_LSTM_model((10, 1), 1)
+def train(model, epochs, X_train, y_train):
     try:
         print("Training...")
 
@@ -47,5 +61,7 @@ def train(epochs):
 
 
 if __name__ == '__main__':
-    train(epochs=10)
-    model_evaluate()
+    model = build_LSTM_model((10, 1), 1)
+    X_train, y_train, X_test, y_test = get_train_and_test_data()
+    train(model, 10, X_train, y_train)
+    model_evaluate(model, X_test, y_test)
