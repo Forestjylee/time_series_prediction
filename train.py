@@ -1,4 +1,5 @@
 import numpy as np
+import pandas as pd
 from tqdm import tqdm
 import tensorflow as tf
 from copy import deepcopy
@@ -36,6 +37,17 @@ def model_evaluate(model, X_test, y_test):
     plt.show()
 
 
+def plot_history(history_df):
+    # 画训练曲线
+    def plot_learning_curves(history_df):
+        history_df.plot(figsize=(8, 5))
+        plt.grid(True)
+        plt.gca().set_ylim(0, 1)
+        plt.show()
+
+    plot_learning_curves(history_df)
+
+
 def train(model, epochs, X_train, y_train):
     try:
         print("Training...")
@@ -51,7 +63,8 @@ def train(model, epochs, X_train, y_train):
                             # validation_data=(X_validation, y_validation),
                             validation_split=0.1,
                             callbacks=[earlystop_callback, select_best_checkpoint])
-        # pd.DataFrame(history.history).to_csv('training_log.csv', index=False)
+        # pd.DataFrame(history.history).to_csv('training_log.csv', index=False)   # save train history
+        # plot_history(pd.DataFrame(history.history))
 
         print(f"Save lstm model to {target_filepath} success")
     except KeyboardInterrupt:
